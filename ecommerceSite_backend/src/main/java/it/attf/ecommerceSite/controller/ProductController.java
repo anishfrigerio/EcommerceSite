@@ -16,20 +16,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/product")
 public class ProductController {
     @Autowired
     ProductService productService;
     @Autowired
     CategoryService categoryService;
 
-    @GetMapping("/")
+    @GetMapping("/product/list")
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<ProductDto> body = productService.listProducts();
         return new ResponseEntity<List<ProductDto>>(body, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/product/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductDto productDto) {
         Optional<Category> optionalCategory = categoryService.readCategory(productDto.getCategoryId());
         if (!optionalCategory.isPresent()) {
@@ -40,7 +39,7 @@ public class ProductController {
         return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Product has been added"), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{productID}")
+    @PostMapping("/product/update/{productID}")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("productID") Integer productID, @RequestBody @Valid ProductDto productDto) {
         Optional<Category> optionalCategory = categoryService.readCategory(productDto.getCategoryId());
         if (!optionalCategory.isPresent()) {

@@ -45,20 +45,18 @@ public class OrderController {
     // place order after checkout
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> placeOrder(@RequestParam("token") String token, @RequestParam("sessionId") String sessionId) {
-        Optional<User> user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
-        User user1 = new User(user.get().getUsername(),user.get().getEmail(),user.get().getPassword());
+        User user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
         // place the order
-        orderService.placeOrder(user1, sessionId);
+        orderService.placeOrder(user, sessionId);
         return new ResponseEntity<>(new ApiResponse(true, "Order has been placed"), HttpStatus.CREATED);
     }
 
     // get all orders
     @GetMapping("/")
     public ResponseEntity<List<Order>> getAllOrders(@RequestParam("token") String token){
-        Optional<User> user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
-        User user1 = new User(user.get().getUsername(),user.get().getEmail(),user.get().getPassword());
+        User user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
         // get orders
-        List<Order> orderDtoList = orderService.listOrders(user1);
+        List<Order> orderDtoList = orderService.listOrders(user);
 
         return new ResponseEntity<>(orderDtoList, HttpStatus.OK);
     }

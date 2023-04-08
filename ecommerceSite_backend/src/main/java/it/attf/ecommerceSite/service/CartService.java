@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -62,9 +63,10 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    public void deleteCartItem(int id,Long userId) throws CartItemNotExistException {
-        if (!cartRepository.existsById(id))
+    public void deleteCartItem(int id) throws CartItemNotExistException {
+        if (!cartRepository.existsById(id)){
             throw new CartItemNotExistException("Cart id is invalid : " + id);
+        }
         cartRepository.deleteById(id);
 
     }

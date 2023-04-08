@@ -13,20 +13,20 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+
 
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/")
+    @GetMapping("/category")
     public ResponseEntity<List<Category>> getCategories() {
         List<Category> body = categoryService.listCategories();
         return new ResponseEntity<List<Category>>(body, HttpStatus.OK);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/category/create")
     public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody Category category) {
         if (Helper.notNull(categoryService.readCategory(category.getCategoryName()))) {
             return new ResponseEntity<ApiResponse>(new ApiResponse(false, "category already exists"), HttpStatus.CONFLICT);
@@ -35,7 +35,7 @@ public class CategoryController {
         return new ResponseEntity<ApiResponse>(new ApiResponse(true, "created the category"), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{categoryID}")
+    @PostMapping("/category/update/{categoryID}")
     public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryID") Integer categoryID, @Valid @RequestBody Category category) {
         //Controlla se la categoria esiste.
         if (Helper.notNull(categoryService.readCategory(categoryID))) {

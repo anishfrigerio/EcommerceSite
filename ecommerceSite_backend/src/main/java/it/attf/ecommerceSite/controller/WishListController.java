@@ -38,8 +38,8 @@ public class WishListController {
 
         @GetMapping("/{token}")
         public ResponseEntity<List<ProductDto>> getWishList(@PathVariable("token") String token) {
-                Optional<User> user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
-                List<WishList> body = wishListService.readWishList(user.get().getId());
+                User user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
+                List<WishList> body = wishListService.readWishList(user.getId());
                 List<ProductDto> products = new ArrayList<ProductDto>();
                 for (WishList wishList : body) {
                         products.add(ProductService.getDtoFromProduct(wishList.getProduct()));
@@ -50,13 +50,10 @@ public class WishListController {
 
         @PostMapping("/add")
         public ResponseEntity<ApiResponse> addWishList(@RequestBody Product product, @RequestParam("token") String token) {
-                Optional<User> user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
-                if (user.isPresent()){
+                User user = userRepo.findByUsername(jwtService.getUserNameFromJwtToken(token));
+                WishList wishList = new WishList(user, product);
+                wishListService.createWishlist(wishList);
 
-                       User user1 = new User(user.get().getUsername(),user.get().getEmail(),user.get().getPassword());
-                        WishList wishList = new WishList(user1, product);
-                        wishListService.createWishlist(wishList);
-                }
 
                 return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Add to wishlist"), HttpStatus.CREATED);
 
